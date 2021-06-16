@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trade
+  template:
+    metadata:
+      labels:
+        app: trade
+    spec:
+      containers:
+        - name: trade
+          image: josephfajardo/trade
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://trade-mongo-srv:27017/trade'
+            - name: JWT_SECRET
+              value: 'qwerty'
+            - name: PORT
+              value: '8000'
+            - name: NATS_URI
+              value: 'nats-srv'
+            - name: NATS_PORT
+              value: '4222'
+            - name: NATS_CLUSTER_ID
+              value: 'portfolio'
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trade-srv
+spec:
+  selector:
+    app: trade
+  ports:
+    - name: trade-srv
+      protocol: TCP
+      port: 8000
+      targetPort: 8000

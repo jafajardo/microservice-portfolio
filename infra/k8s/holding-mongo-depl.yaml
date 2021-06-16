@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: holding-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: holding-mongo
+  template:
+    metadata:
+      labels:
+        app: holding-mongo
+    spec:
+      containers:
+        - name: holding-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: holding-mongo-srv
+spec:
+  selector:
+    app: holding-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

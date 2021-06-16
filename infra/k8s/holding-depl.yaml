@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: holding-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: holding
+  template:
+    metadata:
+      labels:
+        app: holding
+    spec:
+      containers:
+        - name: holding
+          image: josephfajardo/holding
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://holding-mongo-srv:27017/holding'
+            - name: JWT_SECRET
+              value: 'qwerty'
+            - name: NATS_URI
+              value: 'nats-srv'
+            - name: NATS_PORT
+              value: '4222'
+            - name: NATS_CLUSTER_ID
+              value: 'portfolio'
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: holding-srv
+spec:
+  selector:
+    app: holding
+  ports:
+    - name: holding-srv
+      protocol: TCP
+      port: 7000
+      targetPort: 7000

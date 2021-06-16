@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: josephfajardo/auth
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://auth-mongo-srv:27017/auth'
+            - name: JWT_SECRET
+              value: 'qwerty'
+            - name: NATS_URI
+              value: 'nats-srv'
+            - name: NATS_PORT
+              value: '4222'
+            - name: NATS_CLUSTER_ID
+              value: 'portfolio'
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: auth-srv
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

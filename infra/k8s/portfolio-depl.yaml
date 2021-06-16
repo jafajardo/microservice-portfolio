@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio
+  template:
+    metadata:
+      labels:
+        app: portfolio
+    spec:
+      containers:
+        - name: portfolio
+          image: josephfajardo/portfolio
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://portfolio-mongo-srv:27017/portfolio'
+            - name: JWT_SECRET
+              value: 'qwerty'
+            - name: NATS_URI
+              value: 'nats-srv'
+            - name: NATS_PORT
+              value: '4222'
+            - name: NATS_CLUSTER_ID
+              value: 'portfolio'
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-srv
+spec:
+  selector:
+    app: portfolio
+  ports:
+    - name: portfolio-srv
+      protocol: TCP
+      port: 6000
+      targetPort: 6000

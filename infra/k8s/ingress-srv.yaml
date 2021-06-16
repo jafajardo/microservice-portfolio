@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: portfolio.dev
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-srv
+              servicePort: 5000
+          - path: /api/portfolios/?(.*)
+            backend:
+              serviceName: portfolio-srv
+              servicePort: 6000
+          - path: /api/holdings/?(.*)
+            backend:
+              serviceName: holding-srv
+              servicePort: 7000
+          - path: /api/trades/?(.*)
+            backend:
+              serviceName: trade-srv
+              servicePort: 8000
+          - path: /api/sharestats/?(.*)
+            backend:
+              serviceName: sharestats-srv
+              servicePort: 9000
+          - path: /?(.*)
+            backend:
+              serviceName: client-srv
+              servicePort: 3000
