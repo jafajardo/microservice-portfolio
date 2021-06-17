@@ -71,17 +71,20 @@ const tradeCreatedCallback = async (msg, rawData) => {
   try {
     const { portfolioId, symbol } = msg;
     const portfolio = await Portfolio.findById(portfolioId);
+    let holding = await Portfolio.find({ portfolio: portfolio._id, symbol });
     console.log('Portfolio', portfolio);
-    if (portfolio) {
+    if (portfolio && !holding) {
       // TODO: Figure out how to fill up "name" parameter properly
-      const holding = Holding.build({
+      holding = Holding.build({
         name: symbol,
         symbol,
         portfolio: portfolio._id,
       });
       await holding.save();
     } else {
-      console.log('Holding service: Portfolio not found');
+      console.log(
+        'Holding service: Portfolio not found or Holding is present already'
+      );
     }
   } catch (err) {
     console.log('Holding service: Error creating new holding', err);

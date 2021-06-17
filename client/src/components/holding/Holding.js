@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Table, Placeholder } from 'semantic-ui-react';
 import { retrieveShareStat } from '../../actions';
@@ -13,7 +14,9 @@ class Holding extends Component {
     if (stat) {
       return (
         <Table.Row>
-          <Table.Cell>{this.props.name}</Table.Cell>
+          <Table.Cell>
+            <Link to={`/holding/${this.props.id}`}>{this.props.name}</Link>
+          </Table.Cell>
           <Table.Cell>{this.props.symbol}</Table.Cell>
           <Table.Cell>{stat.priceBid}</Table.Cell>
         </Table.Row>

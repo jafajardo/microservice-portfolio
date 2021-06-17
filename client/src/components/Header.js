@@ -32,14 +32,20 @@ class Header extends Component {
   }
 
   render() {
-    return (
-      <div className="ui menu">
-        <div className="header item">
-          <Link to="/">Portfolio Tracker</Link>
+    if (this.props.auth && this.props.auth.currentPortfolio) {
+      return (
+        <div className="ui menu">
+          <div className="header item">
+            <Link to={`/portfolio/${this.props.auth.currentPortfolio.id}`}>
+              Portfolio Tracker
+            </Link>
+          </div>
+          <div className="right menu">{this.renderMenu()}</div>
         </div>
-        <div className="right menu">{this.renderMenu()}</div>
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 }
 

@@ -6,6 +6,7 @@ import Signup from './components/auth/Signup';
 import Signin from './components/auth/Signin';
 import Portfolio from './components/portfolio/Portfolio';
 import NewHolding from './components/holding/New-Holding';
+import HoldingDetails from './components/holding/Holding-Details';
 
 const App = () => {
   return (
@@ -22,6 +23,11 @@ const App = () => {
         exact
         path="/portfolio/:portfolioId/newHolding"
         component={RequireAuth(NewHolding)}
+      />
+      <Route
+        exact
+        path="/holding/:holdingId"
+        component={RequireAuth(HoldingDetails)}
       />
     </Switch>
   );
