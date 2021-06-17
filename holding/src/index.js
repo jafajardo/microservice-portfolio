@@ -5,8 +5,13 @@ const { json } = require('body-parser');
 const { randomBytes } = require('crypto');
 const mongoose = require('mongoose');
 const natsWrapper = require('./nats-wrapper');
-const { Listener, portfolioCreated } = require('@jafajardo-portfolio/common');
+const {
+  Listener,
+  portfolioCreated,
+  tradeCreated,
+} = require('@jafajardo-portfolio/common');
 const Portfolio = require('./models/portfolio');
+const Holding = require('./models/holding');
 const User = require('./models/user');
 const retrieve = require('./routes/retrieve');
 const create = require('./routes/create');
@@ -32,7 +37,7 @@ app.use(create);
 app.use(update);
 app.use(deleteRoute);
 
-const cb = async (msg, rawData) => {
+const portfolioCreatedCallback = async (msg, rawData) => {
   console.log('Received message', msg);
 
   try {
@@ -60,8 +65,34 @@ const cb = async (msg, rawData) => {
   }
 };
 
+const tradeCreatedCallback = async (msg, rawData) => {
+  console.log('Received message - trade created', msg);
+
+  try {
+    const { portfolioId, symbol } = msg;
+    const portfolio = await Portfolio.findById(portfolioId);
+    console.log('Portfolio', portfolio);
+    if (portfolio) {
+      // TODO: Figure out how to fill up "name" parameter properly
+      const holding = Holding.build({
+        name: symbol,
+        symbol,
+        portfolio: portfolio._id,
+      });
+      await holding.save();
+    } else {
+      console.log('Holding service: Portfolio not found');
+    }
+  } catch (err) {
+    console.log('Holding service: Error creating new holding', err);
+  }
+};
+
 const startListener = () => {
-  new Listener(natsWrapper.client, portfolioCreated).listen(cb);
+  new Listener(natsWrapper.client, portfolioCreated).listen(
+    portfolioCreatedCallback
+  );
+  new Listener(natsWrapper.client, tradeCreated).listen(tradeCreatedCallback);
 };
 
 const start = async () => {
