@@ -32,20 +32,22 @@ class Header extends Component {
   }
 
   render() {
-    if (this.props.auth && this.props.auth.currentPortfolio) {
-      return (
-        <div className="ui menu">
-          <div className="header item">
-            <Link to={`/portfolio/${this.props.auth.currentPortfolio.id}`}>
-              Portfolio Tracker
-            </Link>
-          </div>
-          <div className="right menu">{this.renderMenu()}</div>
+    return (
+      <div className="ui menu">
+        <div className="header item">
+          <Link
+            to={
+              this.props.auth.currentPortfolio
+                ? `/portfolio/${this.props.auth.currentPortfolio.id}`
+                : '/'
+            }
+          >
+            Portfolio Tracker
+          </Link>
         </div>
-      );
-    } else {
-      return null;
-    }
+        <div className="right menu">{this.renderMenu()}</div>
+      </div>
+    );
   }
 }
 

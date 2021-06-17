@@ -71,8 +71,9 @@ const tradeCreatedCallback = async (msg, rawData) => {
   try {
     const { portfolioId, symbol } = msg;
     const portfolio = await Portfolio.findById(portfolioId);
-    let holding = await Portfolio.find({ portfolio: portfolio._id, symbol });
+    let holding = await Holding.findOne({ symbol, portfolio: portfolioId });
     console.log('Portfolio', portfolio);
+    console.log('Holdings', holding);
     if (portfolio && !holding) {
       // TODO: Figure out how to fill up "name" parameter properly
       holding = Holding.build({

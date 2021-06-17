@@ -34,11 +34,11 @@ const authReducer = (state = INITIAL_STATE, action) => {
       };
     case SIGNOUT:
       return {
-        ...state,
         authenticated: false,
         error: false,
         currentUser: null,
         msg: null,
+        currentPortfolio: null,
       };
     default:
       return state;
