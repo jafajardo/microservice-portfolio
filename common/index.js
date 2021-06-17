@@ -4,7 +4,11 @@ const { encodeJWT, decodeJWT } = require('./src/services');
 const currentUser = require('./src/middlewares/current-user');
 const requireAuth = require('./src/middlewares/require-auth');
 const validateRequest = require('./src/middlewares/validate-request');
-const { userCreated, portfolioCreated } = require('./src/nats/events');
+const {
+  userCreated,
+  portfolioCreated,
+  tradeCreated,
+} = require('./src/nats/events');
 const TradeTypes = require('./src/enums/tradeTypes');
 
 module.exports = {
