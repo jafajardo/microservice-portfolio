@@ -1,6 +1,6 @@
 {
   "name": "holding",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@jafajardo-portfolio/common": "^1.0.15",
+    "@jafajardo-portfolio/common": "^1.0.16",
     "body-parser": "^1.19.0",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",

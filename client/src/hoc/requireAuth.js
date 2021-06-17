@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { currentUser } from '../actions';
 import history from '../history';
 
-const enhancedComponent = (WrappedComponent) => {
-  class RequireAuth extends Component {
+const RequireAuth = (WrappedComponent) => {
+  class EnhancedComponent extends Component {
     componentDidMount() {
       this.props.currentUser();
     }
@@ -26,7 +26,7 @@ const enhancedComponent = (WrappedComponent) => {
     };
   };
 
-  return connect(mapStateToProps, { currentUser })(RequireAuth);
+  return connect(mapStateToProps, { currentUser })(EnhancedComponent);
 };
 
-export default enhancedComponent;
+export default RequireAuth;

@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
 import Holding from './Holding';
 import history from '../../history';
+// import {
+//   currentUser,
+//   retrieveSpecificPortfolio,
+//   retrieveHoldings,
+// } from '../../actions';
 
 class HoldingContainer extends Component {
+  componentDidMount() {
+    // this.props.currentUser();
+    // this.props.retrieveSpecificPortfolio(this.props.portfolioId);
+    //this.props.retrieveHoldings(this.props.portfolioId);
+  }
+
   renderHoldings() {
-    if (this.props.holdings.length > 0) {
+    if (this.props.holdings && this.props.holdings.length > 0) {
+      console.log(this.props.holdings);
       const { holdings } = this.props;
       return holdings.map((holding) => (
         <Holding
@@ -23,7 +35,7 @@ class HoldingContainer extends Component {
   }
 
   render() {
-    const { id: portfolioId } = this.props.auth.currentPortfolio;
+    const { portfolioId } = this.props;
     return (
       <>
         <Button
@@ -34,7 +46,7 @@ class HoldingContainer extends Component {
         >
           Add New Holding
         </Button>
-        <Table singleLine>
+        <Table striped singleLine selectable>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
@@ -48,10 +60,11 @@ class HoldingContainer extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
-  return {
-    auth: state.auth,
-  };
-};
 
-export default connect(mapStateToProps)(HoldingContainer);
+// const mapStateToProps = (state) => {
+//   return {
+//     auth: state.auth,
+//   };
+// };
+
+export default HoldingContainer;

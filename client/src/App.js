@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import enhancedComponent from './hoc/requireAuth';
+import RequireAuth from './hoc/requireAuth';
 import Welcome from './components/Welcome';
 import Signup from './components/auth/Signup';
 import Signin from './components/auth/Signin';
@@ -16,12 +16,12 @@ const App = () => {
       <Route
         exact
         path="/portfolio/:portfolioId"
-        component={enhancedComponent(Portfolio)}
+        component={RequireAuth(Portfolio)}
       />
       <Route
         exact
         path="/portfolio/:portfolioId/newHolding"
-        component={enhancedComponent(NewHolding)}
+        component={RequireAuth(NewHolding)}
       />
     </Switch>
   );

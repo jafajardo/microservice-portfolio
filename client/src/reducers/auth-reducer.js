@@ -1,4 +1,11 @@
-import { SIGNUP, SIGNIN, ERROR, CURRENT_USER, SIGNOUT } from '../actions/types';
+import {
+  SIGNUP,
+  SIGNIN,
+  ERROR,
+  CURRENT_USER,
+  SIGNOUT,
+  RETRIEVE_SPECIFIC_PORTFOLIO,
+} from '../actions/types';
 
 const INITIAL_STATE = {
   authenticated: false,
@@ -16,6 +23,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return { ...state, authenticated: true, error: false, ...action.payload };
     case ERROR:
       return { ...state, authenticated: false, error: true, ...action.payload };
+    case RETRIEVE_SPECIFIC_PORTFOLIO:
+      return { ...state, currentPortfolio: action.payload };
     case CURRENT_USER:
       return {
         ...state,

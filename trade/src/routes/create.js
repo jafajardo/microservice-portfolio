@@ -5,7 +5,10 @@ const {
   currentUser,
   requireAuth,
   validateRequest,
+  Publisher,
+  tradeCreated,
 } = require('@jafajardo-portfolio/common');
+const natsWrapper = require('../nats-wrapper');
 const Trade = require('../models/trade');
 const Portfolio = require('../models/portfolio');
 
@@ -75,6 +78,12 @@ router.post(
           portfolio,
         });
         await trade.save();
+
+        new Publisher(natsWrapper.client, tradeCreated).publish({
+          portfolioId,
+          symbol: trade.symbol,
+        });
+
         return res.status(201).send(trade);
       } else {
         return res.status(400).send({ msg: 'Invalid portfolio id' });
