@@ -21,5 +21,6 @@ module.exports = {
   requireAuth,
   userCreated,
   portfolioCreated,
+  tradeCreated,
   TradeTypes,
 };
