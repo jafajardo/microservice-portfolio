@@ -1,5 +1,5 @@
 const express = require('express');
-const { body } = require('express-validator');
+const { query } = require('express-validator');
 const mongoose = require('mongoose');
 const {
   currentUser,
@@ -11,16 +11,16 @@ const Portfolio = require('../models/portfolio');
 
 const router = express.Router();
 
-router.post(
+router.get(
   '/api/trades',
   currentUser,
   requireAuth,
   [
-    body('symbol')
+    query('symbol')
       .not()
       .isEmpty()
       .withMessage('Trade/Share symbol is required'),
-    body('portfolioId')
+    query('portfolioId')
       .not()
       .isEmpty()
       .withMessage('Trade/Share portfolio id is required'),
@@ -28,7 +28,7 @@ router.post(
   validateRequest,
   async (req, res) => {
     try {
-      const { symbol, portfolioId } = req.body;
+      const { symbol, portfolioId } = req.query;
       const portfolio = await Portfolio.findById(portfolioId);
       if (portfolio) {
         const trades = await Trade.find({ symbol, portfolio });

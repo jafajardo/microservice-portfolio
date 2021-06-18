@@ -12,12 +12,10 @@ class NewHolding extends Component {
   handleOnSubmit = (e) => {
     e.preventDefault();
     const { id: portfolioId } = this.props.auth.currentPortfolio;
-    console.log(this.state, portfolioId);
     this.props.createTrade({ ...this.state, portfolioId });
   };
 
   handleOnChange = (e) => {
-    console.log(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
   };
 

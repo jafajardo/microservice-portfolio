@@ -41,7 +41,8 @@ class Holding extends Component {
 
   render() {
     const { symbol } = this.props;
-    const stat = this.props.shareStat[this.props.symbol];
+    const stat = this.props.shareStat[symbol];
+    const quantity = this.calculateQuantity(symbol);
 
     if (stat) {
       return (
@@ -51,7 +52,8 @@ class Holding extends Component {
           </Table.Cell>
           <Table.Cell>{symbol}</Table.Cell>
           <Table.Cell>{stat.priceBid}</Table.Cell>
-          <Table.Cell>{this.calculateQuantity(symbol)}</Table.Cell>
+          <Table.Cell>{quantity}</Table.Cell>
+          <Table.Cell>{stat.priceBid * quantity}</Table.Cell>
         </Table.Row>
       );
     } else {
