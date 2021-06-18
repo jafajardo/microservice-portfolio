@@ -3,11 +3,7 @@ import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
 import Holding from './Holding';
 import history from '../../history';
-// import {
-//   currentUser,
-//   retrieveSpecificPortfolio,
-//   retrieveHoldings,
-// } from '../../actions';
+// import { retrieveTrades } from '../../actions';
 
 class HoldingContainer extends Component {
   componentDidMount() {
@@ -52,6 +48,7 @@ class HoldingContainer extends Component {
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Symbol</Table.HeaderCell>
               <Table.HeaderCell>Price</Table.HeaderCell>
+              <Table.HeaderCell>Quantity</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>{this.renderHoldings()}</Table.Body>

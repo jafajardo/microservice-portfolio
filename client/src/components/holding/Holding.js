@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Table, Placeholder } from 'semantic-ui-react';
-import { retrieveShareStat } from '../../actions';
+import { retrieveShareStat, retrieveTrades } from '../../actions';
 
 class Holding extends Component {
   componentDidMount() {
     this.props.retrieveShareStat(this.props.symbol);
+    this.props.retrieveTrades(this.props.symbol, this.props.portfolio);
   }
 
   render() {
+    const { symbol, portfolio: portfolioId } = this.props;
     const stat = this.props.shareStat[this.props.symbol];
     if (stat) {
       return (
@@ -38,7 +40,10 @@ class Holding extends Component {
 const mapStateToProps = (state) => {
   return {
     shareStat: state.shareStat,
+    trade: state.trade,
   };
 };
 
-export default connect(mapStateToProps, { retrieveShareStat })(Holding);
+export default connect(mapStateToProps, { retrieveShareStat, retrieveTrades })(
+  Holding
+);
