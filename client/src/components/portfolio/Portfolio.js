@@ -26,7 +26,6 @@ class Portfolio extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     auth: state.auth,
     holding: state.holding,

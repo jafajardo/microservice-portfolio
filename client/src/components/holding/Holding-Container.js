@@ -14,7 +14,6 @@ class HoldingContainer extends Component {
 
   renderHoldings() {
     if (this.props.holdings && this.props.holdings.length > 0) {
-      console.log(this.props.holdings);
       const { holdings } = this.props;
       return holdings.map((holding) => (
         <Holding

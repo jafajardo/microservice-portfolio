@@ -4,7 +4,7 @@ const INITIAL_STATE = {};
 
 const tradeReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case CREATE_TRADE:
+    case CREATE_TRADE: {
       const key = Object.keys(action.payload)[0];
       const value = Object.values(action.payload)[0];
       const data = state[key];
@@ -13,7 +13,12 @@ const tradeReducer = (state = INITIAL_STATE, action) => {
       } else {
         return { ...state, [key]: [...state[key], value] };
       }
-    case RETRIEVE_TRADES:
+    }
+    case RETRIEVE_TRADES: {
+      const key = Object.keys(action.payload)[0];
+      const value = Object.values(action.payload)[0];
+      return { ...state, [key]: [...value] };
+    }
     case CLEAR_TRADE:
       return {};
     default:
