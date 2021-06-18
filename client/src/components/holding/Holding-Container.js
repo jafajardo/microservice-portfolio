@@ -49,6 +49,7 @@ class HoldingContainer extends Component {
               <Table.HeaderCell>Price</Table.HeaderCell>
               <Table.HeaderCell>Quantity</Table.HeaderCell>
               <Table.HeaderCell>Value</Table.HeaderCell>
+              <Table.HeaderCell>Capital Gains</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>{this.renderHoldings()}</Table.Body>
