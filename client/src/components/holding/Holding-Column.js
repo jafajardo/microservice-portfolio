@@ -5,7 +5,7 @@ import { Table, Placeholder } from 'semantic-ui-react';
 import { retrieveShareStat, retrieveTrades } from '../../actions';
 import { TradeTypes } from '@jafajardo-portfolio/common';
 
-class Holding extends Component {
+class HoldingColumn extends Component {
   componentDidMount() {
     this.props.retrieveShareStat(this.props.symbol);
     this.props.retrieveTrades(this.props.symbol, this.props.portfolio);
@@ -90,7 +90,11 @@ class Holding extends Component {
       return (
         <Table.Row>
           <Table.Cell>
-            <Link to={`/holding/${this.props.id}`}>{this.props.name}</Link>
+            <Link
+              to={`/portfolio/${this.props.portfolio}/${this.props.symbol}`}
+            >
+              {this.props.name}
+            </Link>
           </Table.Cell>
           <Table.Cell>{symbol}</Table.Cell>
           <Table.Cell>{stat.priceBid}</Table.Cell>
@@ -121,5 +125,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { retrieveShareStat, retrieveTrades })(
-  Holding
+  HoldingColumn
 );

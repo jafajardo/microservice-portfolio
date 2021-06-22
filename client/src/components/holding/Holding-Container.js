@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
-import Holding from './Holding';
+import HoldingColumn from './Holding-Column';
 import history from '../../history';
 // import { retrieveTrades } from '../../actions';
 
@@ -16,13 +16,13 @@ class HoldingContainer extends Component {
     if (this.props.holdings && this.props.holdings.length > 0) {
       const { holdings } = this.props;
       return holdings.map((holding) => (
-        <Holding
+        <HoldingColumn
           key={`${holding.id}`}
           id={holding.id}
           portfolio={holding.portfolio}
           name={holding.name}
           symbol={holding.symbol}
-        ></Holding>
+        ></HoldingColumn>
       ));
     }
 
@@ -41,7 +41,7 @@ class HoldingContainer extends Component {
         >
           Add New Holding
         </Button>
-        <Table striped singleLine selectable>
+        <Table striped singleLine selectable compact="very">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>

@@ -26,7 +26,7 @@ const App = () => {
       />
       <Route
         exact
-        path="/holding/:holdingId"
+        path="/portfolio/:portfolioId/:symbol"
         component={RequireAuth(HoldingDetails)}
       />
     </Switch>
