@@ -12,15 +12,21 @@ pipeline {
   }
   agent { dockerfile true }
   stages {
-    stage('Clone Git') {
+    stage('Cloning Git') {
       steps {
         git([url: 'https://github.com/jafajardo/microservice-portfolio.git', branch: 'master', credentialsId: 'github-public-credentials'])
       }
     }
-    stage('Build and Deploy Auth Image') {
+    stage('Building and Deploy Auth Image') {
       steps{
         script {
           dockerImage = docker.build(authImageName, "./auth")
+        }
+      }
+    }
+    stage('Deploy auth image') {
+      steps{
+        script {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push('latest')
@@ -28,10 +34,16 @@ pipeline {
         }
       }
     }
-    stage('Build and Deploy Client Image') {
+    stage('Building client image') {
       steps{
         script {
           dockerImage = docker.build(clientImageName, "./client")
+        }
+      }
+    }
+    stage('Deploy client image') {
+      steps{
+        script {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push('latest')
@@ -39,10 +51,16 @@ pipeline {
         }
       }
     }
-    stage('Build and Deploy Holding Image') {
+    stage('Building holding image') {
       steps{
         script {
           dockerImage = docker.build(holdingImageName, "./holding")
+        }
+      }
+    }
+    stage('Deploy holding image') {
+      steps{
+        script {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push('latest')
@@ -50,10 +68,16 @@ pipeline {
         }
       }
     }
-    stage('Build and Deploy Portfolio Image') {
+    stage('Building portfolio image') {
       steps{
         script {
           dockerImage = docker.build(portfolioImageName, "./portfolio")
+        }
+      }
+    }
+    stage('Deploy portfolio image') {
+      steps{
+        script {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push('latest')
@@ -61,10 +85,16 @@ pipeline {
         }
       }
     }
-    stage('Build and Deploy Share-stats Image') {
+    stage('Building share-stats image') {
       steps{
         script {
           dockerImage = docker.build(shareStatsImageName, "./share-stats")
+        }
+      }
+    }
+    stage('Deploy share-stats image') {
+      steps{
+        script {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push('latest')
@@ -72,10 +102,16 @@ pipeline {
         }
       }
     }
-    stage('Build and Deploy Trade Image') {
+    stage('Building trade image') {
       steps{
         script {
           dockerImage = docker.build(tradeImageName, "./trade")
+        }
+      }
+    }
+    stage('Deploy trade image') {
+      steps{
+        script {
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push('latest')
@@ -85,6 +121,7 @@ pipeline {
     }
     stage('Remove Unused docker image') {
       steps{
+        
         sh "docker rmi $authImageName:${env.BUILD_NUMBER}"
         sh "docker rmi $authImageName:latest"
 
