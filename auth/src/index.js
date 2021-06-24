@@ -32,6 +32,39 @@ app.use(signin);
 app.use(signout);
 app.use(currentUser);
 
+const connectNats = () => {
+  return new Promise((resolve, reject) => {
+    const clusterId = process.env.NATS_CLUSTER_ID;
+    const clientId = process.env.NATS_CLIENT_ID || randomBytes(8).toString('hex');
+
+    natsWrapper.connect(
+      clusterId,
+      clientId,
+      `http://${process.env.NATS_URI}:${process.env.NATS_PORT}`
+    )
+    .then(resolve)
+    .catch(reject);
+  });
+}
+
+const wait = (delay) => { return new Promise(r => setTimeout(r, delay)) };
+
+const retryOperation = (operation, delay, retries) => {
+  return new Promise((resolve, reject) => {
+    return operation()
+      .then(resolve)
+      .catch((reason) => {
+        if (retries > 0) {
+          return wait(delay)
+            .then(retryOperation.bind(null, operation, delay, retries - 1))
+            .then(resolve)
+            .catch(reject)
+        }
+        return reject(reason)
+      })
+  })
+}
+
 const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -45,14 +78,7 @@ const start = async () => {
   }
 
   try {
-    const clusterId = process.env.NATS_CLUSTER_ID;
-    const clientId =
-      process.env.NATS_CLIENT_ID || randomBytes(8).toString('hex');
-    await natsWrapper.connect(
-      clusterId,
-      clientId,
-      `http://${process.env.NATS_URI}:${process.env.NATS_PORT}`
-    );
+    retryOperation(connectNats, 1000, 5);
   } catch (err) {
     console.log('Error connecting to NATS server', err);
   }

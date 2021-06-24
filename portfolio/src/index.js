@@ -1,21 +1,21 @@
-const express = require('express');
-const { json } = require('body-parser');
-const cookieSession = require('cookie-session');
-const cors = require('cors');
-const { randomBytes } = require('crypto');
-const mongoose = require('mongoose');
+const express = require("express");
+const { json } = require("body-parser");
+const cookieSession = require("cookie-session");
+const cors = require("cors");
+const { randomBytes } = require("crypto");
+const mongoose = require("mongoose");
 const {
   Listener,
   Publisher,
   userCreated,
   portfolioCreated,
-} = require('@jafajardo-portfolio/common');
-const natsWrapper = require('./nats-wrapper');
-const { createPortfolio } = require('./services');
-const create = require('./routes/create');
-const retrieve = require('./routes/retrieve');
-const update = require('./routes/update');
-const deletePortfolio = require('./routes/delete');
+} = require("@jafajardo-portfolio/common");
+const natsWrapper = require("./nats-wrapper");
+const { createPortfolio } = require("./services");
+const create = require("./routes/create");
+const retrieve = require("./routes/retrieve");
+const update = require("./routes/update");
+const deletePortfolio = require("./routes/delete");
 
 const app = express();
 
@@ -36,12 +36,12 @@ app.use(update);
 app.use(deletePortfolio);
 
 const cb = async (msg, rawData) => {
-  console.log('Callback received message', msg);
-  console.log('Creating default portfolio for new user...');
+  console.log("Callback received message", msg);
+  console.log("Creating default portfolio for new user...");
 
   const portfolio = await createPortfolio(msg.id, msg.email);
   if (portfolio) {
-    console.log('Successfully created new portfolio...');
+    console.log("Successfully created new portfolio...");
 
     // Publish creation of new portfolio
     new Publisher(natsWrapper.client, portfolioCreated).publish({
@@ -59,31 +59,70 @@ const cb = async (msg, rawData) => {
 };
 
 const startListener = () => {
-  new Listener(natsWrapper.client, userCreated).listen(cb);
+  return new Promise((resolve, reject) => {
+    try {
+      new Listener(natsWrapper.client, userCreated).listen(cb);
+      resolve;
+    } catch (err) {
+      console.log("Retry connecting to NATS server");
+      reject;
+    }
+  });
 };
 
-const clusterId = process.env.NATS_CLUSTER_ID;
-const clientId = process.env.NATS_CLIENT_ID || randomBytes(8).toString('hex');
-const start = async () => {
-  try {
-    await natsWrapper.connect(
-      clusterId,
-      clientId,
-      `http://${process.env.NATS_URI}:${process.env.NATS_PORT}`
-    );
-  } catch (err) {
-    console.log('Error connecting to NATS server', err);
-  }
+const connectNats = () => {
+  return new Promise((resolve, reject) => {
+    const clusterId = process.env.NATS_CLUSTER_ID;
+    const clientId =
+      process.env.NATS_CLIENT_ID || randomBytes(8).toString("hex");
 
+    natsWrapper
+      .connect(
+        clusterId,
+        clientId,
+        `http://${process.env.NATS_URI}:${process.env.NATS_PORT}`
+      )
+      .then(resolve)
+      .catch(reject);
+  });
+};
+
+const wait = (delay) => {
+  return new Promise((r) => setTimeout(r, delay));
+};
+
+const retryOperation = (operation, delay, retries) => {
+  return new Promise((resolve, reject) => {
+    return operation()
+      .then(resolve)
+      .catch((reason) => {
+        if (retries > 0) {
+          return wait(delay)
+            .then(retryOperation.bind(null, operation, delay, retries - 1))
+            .then(resolve)
+            .catch(reject);
+        }
+        return reject(reason);
+      });
+  });
+};
+
+const start = () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
-    console.log('Connected to Mongodb!');
+    console.log("Connected to Mongodb!");
   } catch (err) {
-    console.log('Error connecting to Mongodb:', err);
+    console.log("Error connecting to Mongodb:", err);
+  }
+
+  try {
+    retryOperation(connectNats, 1000, 5);
+  } catch (err) {
+    console.log("Error connecting to NATS server", err);
   }
 
   const PORT = process.env.PORT || 6000;
@@ -93,4 +132,4 @@ const start = async () => {
 };
 
 start();
-startListener();
+retryOperation(startListener, 1000, 5);

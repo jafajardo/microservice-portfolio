@@ -1,22 +1,22 @@
-const express = require('express');
-const cors = require('cors');
-const cookieSession = require('cookie-session');
-const { json } = require('body-parser');
-const { randomBytes } = require('crypto');
-const mongoose = require('mongoose');
-const natsWrapper = require('./nats-wrapper');
+const express = require("express");
+const cors = require("cors");
+const cookieSession = require("cookie-session");
+const { json } = require("body-parser");
+const { randomBytes } = require("crypto");
+const mongoose = require("mongoose");
+const natsWrapper = require("./nats-wrapper");
 const {
   Listener,
   portfolioCreated,
   tradeCreated,
-} = require('@jafajardo-portfolio/common');
-const Portfolio = require('./models/portfolio');
-const Holding = require('./models/holding');
-const User = require('./models/user');
-const retrieve = require('./routes/retrieve');
-const create = require('./routes/create');
-const update = require('./routes/update');
-const deleteRoute = require('./routes/delete');
+} = require("@jafajardo-portfolio/common");
+const Portfolio = require("./models/portfolio");
+const Holding = require("./models/holding");
+const User = require("./models/user");
+const retrieve = require("./routes/retrieve");
+const create = require("./routes/create");
+const update = require("./routes/update");
+const deleteRoute = require("./routes/delete");
 
 const app = express();
 const PORT = process.env.PORT || 7000;
@@ -38,7 +38,7 @@ app.use(update);
 app.use(deleteRoute);
 
 const portfolioCreatedCallback = async (msg, rawData) => {
-  console.log('Received message', msg);
+  console.log("Received message", msg);
 
   try {
     const { id: userId, email } = msg.user;
@@ -61,19 +61,19 @@ const portfolioCreatedCallback = async (msg, rawData) => {
     }
     rawData.ack();
   } catch (err) {
-    console.log('Holding service: Error creating new portfolio', err);
+    console.log("Holding service: Error creating new portfolio", err);
   }
 };
 
 const tradeCreatedCallback = async (msg, rawData) => {
-  console.log('Received message - trade created', msg);
+  console.log("Received message - trade created", msg);
 
   try {
     const { portfolioId, symbol } = msg;
     const portfolio = await Portfolio.findById(portfolioId);
     let holding = await Holding.findOne({ symbol, portfolio: portfolioId });
-    console.log('Portfolio', portfolio);
-    console.log('Holdings', holding);
+    console.log("Portfolio", portfolio);
+    console.log("Holdings", holding);
     if (portfolio && !holding) {
       // TODO: Figure out how to fill up "name" parameter properly
       holding = Holding.build({
@@ -84,47 +84,89 @@ const tradeCreatedCallback = async (msg, rawData) => {
       await holding.save();
     } else {
       console.log(
-        'Holding service: Portfolio not found or Holding is present already'
+        "Holding service: Portfolio not found or Holding is present already"
       );
     }
   } catch (err) {
-    console.log('Holding service: Error creating new holding', err);
+    console.log("Holding service: Error creating new holding", err);
   }
 };
 
 const startListener = () => {
-  new Listener(natsWrapper.client, portfolioCreated).listen(
-    portfolioCreatedCallback
-  );
-  new Listener(natsWrapper.client, tradeCreated).listen(tradeCreatedCallback);
+  return new Promise((resolve, reject) => {
+    try {
+      new Listener(natsWrapper.client, portfolioCreated).listen(
+        portfolioCreatedCallback
+      );
+      new Listener(natsWrapper.client, tradeCreated).listen(
+        tradeCreatedCallback
+      );
+
+      resolve;
+    } catch (err) {
+      console.log("Retry connecting to NATS server");
+      reject;
+    }
+  });
+};
+
+const connectNats = () => {
+  return new Promise((resolve, reject) => {
+    const clusterId = process.env.NATS_CLUSTER_ID;
+    const clientId =
+      process.env.NATS_CLIENT_ID || randomBytes(8).toString("hex");
+
+    natsWrapper
+      .connect(
+        clusterId,
+        clientId,
+        `http://${process.env.NATS_URI}:${process.env.NATS_PORT}`
+      )
+      .then(resolve)
+      .catch(reject);
+  });
+};
+
+const wait = (delay) => {
+  return new Promise((r) => setTimeout(r, delay));
+};
+
+const retryOperation = (operation, delay, retries) => {
+  return new Promise((resolve, reject) => {
+    return operation()
+      .then(resolve)
+      .catch((reason) => {
+        if (retries > 0) {
+          return wait(delay)
+            .then(retryOperation.bind(null, operation, delay, retries - 1))
+            .then(resolve)
+            .catch(reject);
+        }
+        return reject(reason);
+      });
+  });
 };
 
 const start = async () => {
-  try {
-    const clusterId = process.env.NATS_CLUSTER_ID;
-    const clientId =
-      process.env.NATS_CLIENT_ID || randomBytes(8).toString('hex');
-    await natsWrapper.connect(
-      clusterId,
-      clientId,
-      `http://${process.env.NATS_URI}:${process.env.NATS_PORT}`
-    );
-  } catch (err) {
-    console.log('NatsWrapper initialisation failed', err);
-  }
-
   try {
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
-    console.log('Connected to Mongodb');
+    console.log("Connected to Mongodb");
   } catch (err) {
-    console.log('Error connecting to Mongodb', err);
+    console.log("Error connecting to Mongodb", err);
   }
+
+  try {
+    retryOperation(connectNats, 1000, 5);
+  } catch (err) {
+    console.log("Error connecting to NATS server", err);
+  }
+
   app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 };
 
 start();
-startListener();
+retryOperation(startListener, 1000, 7);
