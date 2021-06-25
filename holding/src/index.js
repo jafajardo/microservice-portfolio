@@ -87,6 +87,8 @@ const tradeCreatedCallback = async (msg, rawData) => {
         "Holding service: Portfolio not found or Holding is present already"
       );
     }
+
+    rawData.ack();
   } catch (err) {
     console.log("Holding service: Error creating new holding", err);
   }
@@ -102,10 +104,10 @@ const startListener = () => {
         tradeCreatedCallback
       );
 
-      resolve;
+      return resolve();
     } catch (err) {
       console.log("Retry connecting to NATS server");
-      reject;
+      return reject();
     }
   });
 };
@@ -116,7 +118,7 @@ const connectNats = () => {
     const clientId =
       process.env.NATS_CLIENT_ID || randomBytes(8).toString("hex");
 
-    natsWrapper
+    return natsWrapper
       .connect(
         clusterId,
         clientId,
@@ -160,7 +162,10 @@ const start = async () => {
   }
 
   try {
-    retryOperation(connectNats, 1000, 5);
+    retryOperation(connectNats, 2000, 10)
+      .then(() => retryOperation(startListener, 2000, 10))
+      .then(console.log("Listening to NATS server..."))
+      .catch(console.log);
   } catch (err) {
     console.log("Error connecting to NATS server", err);
   }
@@ -169,4 +174,3 @@ const start = async () => {
 };
 
 start();
-retryOperation(startListener, 1000, 7);

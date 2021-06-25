@@ -81,10 +81,10 @@ const startListeners = () => {
       new Listener(natsWrapper.client, portfolioCreated).listen(
         processPortfolioCreatedMessage
       );
-      resolve;
+      return resolve();
     } catch (err) {
       console.log("Retry connecting to NATS server");
-      reject;
+      return reject();
     }
   });
 };
@@ -95,7 +95,7 @@ const connectNats = () => {
     const clientId =
       process.env.NATS_CLIENT_ID || randomBytes(8).toString("hex");
 
-    natsWrapper
+    return natsWrapper
       .connect(
         clusterId,
         clientId,
@@ -126,9 +126,9 @@ const retryOperation = (operation, delay, retries) => {
   });
 };
 
-const start = () => {
+const start = async () => {
   try {
-    mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
@@ -139,7 +139,9 @@ const start = () => {
   }
 
   try {
-    retryOperation(connectNats, 1000, 5);
+    retryOperation(connectNats, 2000, 10)
+      .then(retryOperation(startListeners, 2000, 10))
+      .catch(console.log);
   } catch (err) {
     console.log("Error connecting to NATS server", err);
   }
@@ -149,4 +151,3 @@ const start = () => {
 };
 
 start();
-retryOperation(startListeners, 1000, 5);

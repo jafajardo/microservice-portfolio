@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev-start": "NODE_ENV=DEV nodemon ./src/index.js"
+    "dev-start": "nodemon ./src/index.js"
   },
   "author": "",
   "license": "ISC",
