@@ -14,18 +14,18 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: josephfajardo/portfolio
+          image: josephfajardo/portfolio-portfolio
           env:
             - name: MONGO_URI
-              value: 'mongodb://portfolio-mongo-srv:27017/portfolio'
+              value: "mongodb://portfolio-mongo-srv:27017/portfolio"
             - name: JWT_SECRET
-              value: 'qwerty'
+              value: "qwerty"
             - name: NATS_URI
-              value: 'nats-srv'
+              value: "nats-srv"
             - name: NATS_PORT
-              value: '4222'
+              value: "4222"
             - name: NATS_CLUSTER_ID
-              value: 'portfolio'
+              value: "portfolio"
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
