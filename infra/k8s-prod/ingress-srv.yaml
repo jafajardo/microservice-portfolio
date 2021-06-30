@@ -40,7 +40,7 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: 'true'
-    service.beta.kubernetes.io/do-loadbalancer-hostname: 'micro-ticketing-deploy-prod.xyz'
+    service.beta.kubernetes.io/do-loadbalancer-hostname: 'www.micro-ticketing-deploy-prod.xyz'
   labels:
     helm.sh/chart: ingress-nginx-2.0.3
     app.kubernetes.io/name: ingress-nginx
