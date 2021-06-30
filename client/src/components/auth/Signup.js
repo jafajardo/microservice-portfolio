@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Form, Message } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Message,
+  Grid,
+  Header,
+  Segment,
+} from 'semantic-ui-react';
 import { signup } from '../../actions';
 
 class Signup extends Component {
@@ -29,28 +36,48 @@ class Signup extends Component {
 
   render() {
     return (
-      <Form error className="ui container" onSubmit={this.handleOnSubmit}>
-        <Form.Field>
-          <label>Email</label>
-          <input
-            placeholder="Email"
-            name="email"
-            onChange={this.handleOnChange}
-          />
-        </Form.Field>
-        <Form.Field>
-          <label>Password</label>
-          <input
-            placeholder="Password"
-            name="password"
-            onChange={this.handleOnChange}
-          />
-        </Form.Field>
-        {this.renderErrorMessage()}
-        <Button type="submit" className="btn">
-          Create an account
-        </Button>
-      </Form>
+      <Grid
+        textAlign="center"
+        style={{ height: '80vh' }}
+        verticalAlign="middle"
+      >
+        <Grid.Column style={{ maxWidth: '450px' }}>
+          <Header as="h2" style={{ color: '#3eaaaf' }} textAlign="center">
+            Sign-up for an account
+          </Header>
+          <Form
+            size="large"
+            error={this.props.auth.error ? true : undefined}
+            className="ui container"
+            onSubmit={this.handleOnSubmit}
+          >
+            <Segment stacked>
+              <Form.Input
+                fluid
+                icon="user"
+                iconPosition="left"
+                placeholder="E-mail address"
+                name="email"
+                onChange={this.handleOnChange}
+              />
+              <Form.Input
+                type="password"
+                fluid
+                icon="lock"
+                iconPosition="left"
+                placeholder="Password"
+                name="password"
+                onChange={this.handleOnChange}
+              />
+
+              <Button fluid className="btn" size="large">
+                Create an account
+              </Button>
+            </Segment>
+          </Form>
+          {this.renderErrorMessage()}
+        </Grid.Column>
+      </Grid>
     );
   }
 }
