@@ -1,15 +1,15 @@
-const express = require("express");
-const { json } = require("body-parser");
-const cookieSession = require("cookie-session");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const { natsWrapper } = require("./nats-wrapper");
-const { randomBytes } = require("crypto");
+const express = require('express');
+const { json } = require('body-parser');
+const cookieSession = require('cookie-session');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const { natsWrapper } = require('./nats-wrapper');
+const { randomBytes } = require('crypto');
 
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-app.set("trust proxy", true);
+app.set('trust proxy', true);
 
 // Middleware
 app.use(json());
@@ -22,10 +22,10 @@ app.use(
 );
 
 // Routes
-const { signup } = require("./routes/signup");
-const { signin } = require("./routes/signin");
-const { signout } = require("./routes/signout");
-const { currentUser } = require("./routes/current-user");
+const { signup } = require('./routes/signup');
+const { signin } = require('./routes/signin');
+const { signout } = require('./routes/signout');
+const { currentUser } = require('./routes/current-user');
 
 app.use(signup);
 app.use(signin);
@@ -36,7 +36,7 @@ const connectNats = () => {
   return new Promise((resolve, reject) => {
     const clusterId = process.env.NATS_CLUSTER_ID;
     const clientId =
-      process.env.NATS_CLIENT_ID || randomBytes(8).toString("hex");
+      process.env.NATS_CLIENT_ID || randomBytes(8).toString('hex');
 
     return natsWrapper
       .connect(
@@ -76,19 +76,19 @@ const start = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
-    console.log("Connected to mongodb...");
+    console.log('Connected to mongodb...');
   } catch (err) {
-    console.log("Error connecting to Mongodb:", err);
+    console.log('Error connecting to Mongodb:', err);
   }
 
   try {
     await retryOperation(connectNats, 1000, 5);
   } catch (err) {
-    console.log("Error connecting to NATS server", err);
+    console.log('Error connecting to NATS server', err);
   }
 
   app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}!`);
+    console.log(`Listening on port ${PORT}...`);
   });
 };
 

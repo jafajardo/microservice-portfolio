@@ -1,23 +1,23 @@
-name: deploy-auth
+name: deploy-holding
 on:
   push:
     branches:
       - master
     paths:
-      - 'auth/**'
+      - 'holding/**'
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd auth && docker build -t josephfajardo/portfolio-auth .
+      - run: cd holding && docker build -t josephfajardo/portfolio-holding .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker push josephfajardo/portfolio-auth
+      - run: docker push josephfajardo/portfolio-holding
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - run: doctl kubernetes cluster kubeconfig save micro-portfolio
-      - run: kubectl rollout restart deployment auth-depl
+      - run: kubectl rollout restart deployment holding-depl

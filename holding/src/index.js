@@ -1,22 +1,22 @@
-const express = require("express");
-const cors = require("cors");
-const cookieSession = require("cookie-session");
-const { json } = require("body-parser");
-const { randomBytes } = require("crypto");
-const mongoose = require("mongoose");
-const natsWrapper = require("./nats-wrapper");
+const express = require('express');
+const cors = require('cors');
+const cookieSession = require('cookie-session');
+const { json } = require('body-parser');
+const { randomBytes } = require('crypto');
+const mongoose = require('mongoose');
+const natsWrapper = require('./nats-wrapper');
 const {
   Listener,
   portfolioCreated,
   tradeCreated,
-} = require("@jafajardo-portfolio/common");
-const Portfolio = require("./models/portfolio");
-const Holding = require("./models/holding");
-const User = require("./models/user");
-const retrieve = require("./routes/retrieve");
-const create = require("./routes/create");
-const update = require("./routes/update");
-const deleteRoute = require("./routes/delete");
+} = require('@jafajardo-portfolio/common');
+const Portfolio = require('./models/portfolio');
+const Holding = require('./models/holding');
+const User = require('./models/user');
+const retrieve = require('./routes/retrieve');
+const create = require('./routes/create');
+const update = require('./routes/update');
+const deleteRoute = require('./routes/delete');
 
 const app = express();
 const PORT = process.env.PORT || 7000;
@@ -38,7 +38,7 @@ app.use(update);
 app.use(deleteRoute);
 
 const portfolioCreatedCallback = async (msg, rawData) => {
-  console.log("Received message", msg);
+  console.log('Received message', msg);
 
   try {
     const { id: userId, email } = msg.user;
@@ -61,19 +61,19 @@ const portfolioCreatedCallback = async (msg, rawData) => {
     }
     rawData.ack();
   } catch (err) {
-    console.log("Holding service: Error creating new portfolio", err);
+    console.log('Holding service: Error creating new portfolio', err);
   }
 };
 
 const tradeCreatedCallback = async (msg, rawData) => {
-  console.log("Received message - trade created", msg);
+  console.log('Received message - trade created', msg);
 
   try {
     const { portfolioId, symbol } = msg;
     const portfolio = await Portfolio.findById(portfolioId);
     let holding = await Holding.findOne({ symbol, portfolio: portfolioId });
-    console.log("Portfolio", portfolio);
-    console.log("Holdings", holding);
+    console.log('Portfolio', portfolio);
+    console.log('Holdings', holding);
     if (portfolio && !holding) {
       // TODO: Figure out how to fill up "name" parameter properly
       holding = Holding.build({
@@ -84,13 +84,13 @@ const tradeCreatedCallback = async (msg, rawData) => {
       await holding.save();
     } else {
       console.log(
-        "Holding service: Portfolio not found or Holding is present already"
+        'Holding service: Portfolio not found or Holding is present already'
       );
     }
 
     rawData.ack();
   } catch (err) {
-    console.log("Holding service: Error creating new holding", err);
+    console.log('Holding service: Error creating new holding', err);
   }
 };
 
@@ -106,7 +106,7 @@ const startListener = () => {
 
       return resolve();
     } catch (err) {
-      console.log("Retry connecting to NATS server");
+      console.log('Retry connecting to NATS server');
       return reject();
     }
   });
@@ -116,7 +116,7 @@ const connectNats = () => {
   return new Promise((resolve, reject) => {
     const clusterId = process.env.NATS_CLUSTER_ID;
     const clientId =
-      process.env.NATS_CLIENT_ID || randomBytes(8).toString("hex");
+      process.env.NATS_CLIENT_ID || randomBytes(8).toString('hex');
 
     return natsWrapper
       .connect(
@@ -156,21 +156,21 @@ const start = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
-    console.log("Connected to Mongodb");
+    console.log('Connected to Mongodb');
   } catch (err) {
-    console.log("Error connecting to Mongodb", err);
+    console.log('Error connecting to Mongodb', err);
   }
 
   try {
     retryOperation(connectNats, 2000, 10)
       .then(() => retryOperation(startListener, 2000, 10))
-      .then(console.log("Listening to NATS server..."))
+      .then(console.log('Listening to NATS server...'))
       .catch(console.log);
   } catch (err) {
-    console.log("Error connecting to NATS server", err);
+    console.log('Error connecting to NATS server', err);
   }
 
-  app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}....`));
 };
 
 start();

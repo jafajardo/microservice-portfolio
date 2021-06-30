@@ -14,18 +14,18 @@ spec:
     spec:
       containers:
         - name: holding
-          image: josephfajardo/holding
+          image: josephfajardo/portfolio-holding
           env:
             - name: MONGO_URI
-              value: 'mongodb://holding-mongo-srv:27017/holding'
+              value: "mongodb://holding-mongo-srv:27017/holding"
             - name: JWT_SECRET
-              value: 'qwerty'
+              value: "qwerty"
             - name: NATS_URI
-              value: 'nats-srv'
+              value: "nats-srv"
             - name: NATS_PORT
-              value: '4222'
+              value: "4222"
             - name: NATS_CLUSTER_ID
-              value: 'portfolio'
+              value: "portfolio"
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:

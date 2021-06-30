@@ -1,20 +1,20 @@
-const express = require("express");
-const { json } = require("body-parser");
-const cors = require("cors");
-const cookieSession = require("cookie-session");
-const mongoose = require("mongoose");
-const natsWrapper = require("./nats-wrapper");
+const express = require('express');
+const { json } = require('body-parser');
+const cors = require('cors');
+const cookieSession = require('cookie-session');
+const mongoose = require('mongoose');
+const natsWrapper = require('./nats-wrapper');
 const {
   userCreated,
   portfolioCreated,
   Listener,
-} = require("@jafajardo-portfolio/common");
-const User = require("./models/user");
-const Portfolio = require("./models/portfolio");
-const retrieveRoute = require("./routes/retrieve");
-const createRoute = require("./routes/create");
-const deleteRoute = require("./routes/delete");
-const updateRoute = require("./routes/update");
+} = require('@jafajardo-portfolio/common');
+const User = require('./models/user');
+const Portfolio = require('./models/portfolio');
+const retrieveRoute = require('./routes/retrieve');
+const createRoute = require('./routes/create');
+const deleteRoute = require('./routes/delete');
+const updateRoute = require('./routes/update');
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.use(updateRoute);
 
 const processPortfolioCreatedMessage = async (msg, rawData) => {
   try {
-    console.log("Trade service: callback received message - user created", msg);
+    console.log('Trade service: callback received message - user created', msg);
 
     let portfolio = await Portfolio.findById(msg.id);
     if (!portfolio) {
@@ -51,13 +51,13 @@ const processPortfolioCreatedMessage = async (msg, rawData) => {
     }
     rawData.ack();
   } catch (err) {
-    console.log("Trade service: error while processing callback message", err);
+    console.log('Trade service: error while processing callback message', err);
   }
 };
 
 const processUserCreatedMessage = async (msg, rawData) => {
   try {
-    console.log("Trade service: callback received message - user created", msg);
+    console.log('Trade service: callback received message - user created', msg);
 
     let user = await User.findById(msg.id);
 
@@ -68,7 +68,7 @@ const processUserCreatedMessage = async (msg, rawData) => {
 
     rawData.ack();
   } catch (err) {
-    console.log("Trade service: error while processing callback message", err);
+    console.log('Trade service: error while processing callback message', err);
   }
 };
 
@@ -83,7 +83,7 @@ const startListeners = () => {
       );
       return resolve();
     } catch (err) {
-      console.log("Retry connecting to NATS server");
+      console.log('Retry connecting to NATS server');
       return reject();
     }
   });
@@ -93,7 +93,7 @@ const connectNats = () => {
   return new Promise((resolve, reject) => {
     const clusterId = process.env.NATS_CLUSTER_ID;
     const clientId =
-      process.env.NATS_CLIENT_ID || randomBytes(8).toString("hex");
+      process.env.NATS_CLIENT_ID || randomBytes(8).toString('hex');
 
     return natsWrapper
       .connect(
@@ -133,9 +133,9 @@ const start = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
-    console.log("Connected to Mongodb...");
+    console.log('Connected to Mongodb...');
   } catch (err) {
-    console.log("Error connecting to Mongodb:", err);
+    console.log('Error connecting to Mongodb:', err);
   }
 
   try {
@@ -143,11 +143,11 @@ const start = async () => {
       .then(retryOperation(startListeners, 2000, 10))
       .catch(console.log);
   } catch (err) {
-    console.log("Error connecting to NATS server", err);
+    console.log('Error connecting to NATS server', err);
   }
 
   const PORT = process.env.PORT || 8000;
-  app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}....`));
 };
 
 start();
