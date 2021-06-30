@@ -9,51 +9,51 @@ build:
   local:
     push: false
   artifacts:
-    - image: josephfajardo/auth
+    - image: josephfajardo/portfolio-auth
       context: auth
       docker:
         dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: "src/**/*.js"
             dest: .
-    - image: josephfajardo/portfolio
+    - image: josephfajardo/portfolio-portfolio
       context: portfolio
       docker:
         dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: "src/**/*.js"
             dest: .
-    - image: josephfajardo/holding
+    - image: josephfajardo/portfolio-holding
       context: holding
       docker:
         dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: "src/**/*.js"
             dest: .
-    - image: josephfajardo/trade
+    - image: josephfajardo/portfolio-trade
       context: trade
       docker:
         dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: "src/**/*.js"
             dest: .
-    - image: josephfajardo/sharestats
+    - image: josephfajardo/portfolio-sharestats
       context: share-stats
       docker:
         dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: "src/**/*.js"
             dest: .
-    - image: josephfajardo/client
+    - image: josephfajardo/portfolio-client
       context: client
       docker:
         dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: "src/**/*.js"
             dest: .
