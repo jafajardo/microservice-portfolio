@@ -4,7 +4,7 @@ const Welcome = () => {
   return (
     <div id="main">
       <h1>Portfolio Tracker</h1>
-      <h2>Track and organise your portfolio all in one place</h2>
+      <h2>Track and organise your portfolio all in one place.</h2>
     </div>
   );
 };
