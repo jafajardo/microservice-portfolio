@@ -167,6 +167,7 @@ export const retrieveHoldings = (portfolioId) => {
         `/api/holdings?portfolioId=${portfolioId}`
       );
 
+      console.log(response.data);
       dispatch({ type: RETRIEVE_HOLDINGS, payload: response.data });
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });

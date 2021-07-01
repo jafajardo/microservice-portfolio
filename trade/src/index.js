@@ -36,7 +36,10 @@ app.use(updateRoute);
 
 const processPortfolioCreatedMessage = async (msg, rawData) => {
   try {
-    console.log('Trade service: callback received message - user created', msg);
+    console.log(
+      'Trade service: callback received message - portfolio created',
+      msg
+    );
 
     let portfolio = await Portfolio.findById(msg.id);
     if (!portfolio) {

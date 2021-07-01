@@ -16,9 +16,9 @@ router.get('/api/holdings', currentUser, requireAuth, async (req, res) => {
   try {
     const existingPortfolio = await Portfolio.findById(portfolioId);
     if (!existingPortfolio) {
-      console.log(`Portfolio not found with portfolio id: ${portfolioId}`);
+      console.log(`Portfolio not found for portfolio id: ${portfolioId}`);
       return res.status(400).send({
-        msg: `Portfolio not found with portfolio id: ${portfolioId}`,
+        msg: `Portfolio not found for portfolio id: ${portfolioId}`,
       });
     }
 

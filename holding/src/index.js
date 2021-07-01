@@ -38,7 +38,7 @@ app.use(update);
 app.use(deleteRoute);
 
 const portfolioCreatedCallback = async (msg, rawData) => {
-  console.log('Received message', msg);
+  console.log('Holding Service - Portfolio created', msg);
 
   try {
     const { id: userId, email } = msg.user;
@@ -66,7 +66,7 @@ const portfolioCreatedCallback = async (msg, rawData) => {
 };
 
 const tradeCreatedCallback = async (msg, rawData) => {
-  console.log('Received message - trade created', msg);
+  console.log('Holding Service - Trade created', msg);
 
   try {
     const { portfolioId, symbol } = msg;
@@ -163,7 +163,7 @@ const start = async () => {
 
   try {
     retryOperation(connectNats, 2000, 10)
-      .then(() => retryOperation(startListener, 2000, 10))
+      .then(retryOperation(startListener, 2000, 10))
       .then(console.log('Listening to NATS server...'))
       .catch(console.log);
   } catch (err) {
