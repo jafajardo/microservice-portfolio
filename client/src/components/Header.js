@@ -28,7 +28,7 @@ class Header extends Component {
         <>
           <Menu.Menu position="right">
             <Menu.Item>
-              <Link className="item" to="/" onClick={this.props.signout}>
+              <Link to="/" onClick={this.props.signout}>
                 Signout
               </Link>
             </Menu.Item>
