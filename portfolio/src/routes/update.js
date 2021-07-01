@@ -11,7 +11,6 @@ const router = express.Router();
 
 router.put(
   '/api/portfolios/:portfolioId',
-  currentUser,
   requireAuth,
   [
     body('name').not().isEmpty().withMessage('Portfolio name is required'),

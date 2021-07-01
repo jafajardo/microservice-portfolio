@@ -102,14 +102,15 @@ export const currentUser = () => {
   return async (dispatch) => {
     try {
       const response = await axios.get('/api/users/currentuser');
-
-      const portfolios = await axios.get('/api/portfolios');
-
       let defaultPortfolio = null;
-      if (portfolios) {
-        defaultPortfolio = portfolios?.data.find(
-          (p) => p.isDefault && p.isActive
-        );
+
+      if (response.data && response.data.currentUser) {
+        const portfolios = await axios.get('/api/portfolios');
+        if (portfolios) {
+          defaultPortfolio = portfolios?.data.find(
+            (p) => p.isDefault && p.isActive
+          );
+        }
       }
 
       dispatch({

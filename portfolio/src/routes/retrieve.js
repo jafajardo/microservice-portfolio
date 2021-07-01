@@ -4,7 +4,7 @@ const Portfolio = require('../models/portfolio');
 
 const router = express.Router();
 
-router.get('/api/portfolios', currentUser, requireAuth, async (req, res) => {
+router.get('/api/portfolios', requireAuth, async (req, res) => {
   try {
     const { id } = req.currentUser;
 

@@ -10,7 +10,7 @@ const natsWrapper = require('../nats-wrapper');
 
 const router = express.Router();
 
-router.post('/api/portfolios', currentUser, requireAuth, async (req, res) => {
+router.post('/api/portfolios', requireAuth, async (req, res) => {
   console.log(req.currentUser);
 
   const { id } = req.currentUser;

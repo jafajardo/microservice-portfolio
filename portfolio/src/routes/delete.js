@@ -1,9 +1,10 @@
 const express = require('express');
 const Portfolio = require('../models/portfolio');
+const { requireAuth } = require('@jafajardo-portfolio/common');
 
 const router = express.Router();
 
-router.delete('/api/portfolios/:portfolioId', async (req, res) => {
+router.delete('/api/portfolios/:portfolioId', requireAuth, async (req, res) => {
   const { portfolioId } = req.params;
 
   const portfolio = await Portfolio.findById(portfolioId);

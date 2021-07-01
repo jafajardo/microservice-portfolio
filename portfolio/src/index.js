@@ -16,6 +16,7 @@ const create = require('./routes/create');
 const retrieve = require('./routes/retrieve');
 const update = require('./routes/update');
 const deletePortfolio = require('./routes/delete');
+const { currentUser } = require('@jafajardo-portfolio/common');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(
     signed: false,
   })
 );
+app.use(currentUser);
 
 // Routes
 app.use(create);
