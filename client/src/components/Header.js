@@ -52,7 +52,15 @@ class Header extends Component {
         <Menu fixed="top" inverted>
           <Container>
             <Menu.Item as="a" header>
-              <Link to="/">Foliotracker</Link>
+              <Link
+                to={
+                  this.props.auth.currentPortfolio
+                    ? `/portfolio/${this.props.auth.currentPortfolio.id}`
+                    : '/'
+                }
+              >
+                Foliotracker
+              </Link>
             </Menu.Item>
             {this.renderDashboard()}
             {this.renderMenu()}
