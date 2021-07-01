@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const { encodeJWT } = require('@jafajardo-portfolio/common');
+const Password = require('../services/password');
 
 const router = express.Router();
 
@@ -16,6 +17,14 @@ router.post('/api/users/signin', async (req, res) => {
     return res.status(400).send({ msg: 'Invalid email or password' });
   }
 
+  const passwordMatches = await Password.compare(
+    existingUser.password,
+    password
+  );
+  if (!passwordMatches) {
+    return res.status(400).send({ msg: 'Invalid email or password' });
+  }
+
   req.session.jwt = {
     jwt: encodeJWT(
       { id: existingUser.id, email: existingUser.email },
@@ -26,4 +35,4 @@ router.post('/api/users/signin', async (req, res) => {
   res.status(200).send(existingUser);
 });
 
-exports.signin = router;
+module.exports = router;

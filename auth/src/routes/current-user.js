@@ -4,7 +4,7 @@ const { currentUser } = require('@jafajardo-portfolio/common');
 const router = express.Router();
 
 router.get('/api/users/currentuser', currentUser, async (req, res) => {
-  res.status(200).send({ currentUser: req.currentUser || null });
+  return res.status(200).send({ currentUser: req.currentUser || null });
 });
 
-exports.currentUser = router;
+module.exports = router;

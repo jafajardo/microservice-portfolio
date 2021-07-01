@@ -22,10 +22,10 @@ app.use(
 );
 
 // Routes
-const { signup } = require('./routes/signup');
-const { signin } = require('./routes/signin');
-const { signout } = require('./routes/signout');
-const { currentUser } = require('./routes/current-user');
+const signup = require('./routes/signup');
+const signin = require('./routes/signin');
+const signout = require('./routes/signout');
+const currentUser = require('./routes/current-user');
 
 app.use(signup);
 app.use(signin);
