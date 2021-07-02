@@ -1,13 +1,33 @@
-body {
+:root {
   font-family: 'proxima-nova', 'proxima nova', 'helvetica neue', 'helvetica',
-    'arial', sans-serif;
+    'arial', sans-serif !important;
   color: #444;
+  line-height: 1.5;
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
+/* SET FONT */
+h1,
+h2,
+h3,
+h4,
+h5,
+body,
+.ui.menu {
+  font-family: 'proxima-nova', 'proxima nova', 'helvetica neue', 'helvetica',
+    'arial', sans-serif !important;
 }
 
 a {
-  color: #0069ff;
+  color: #444;
 }
 
 .btn {
   background-color: #3eaaaf !important;
+}
+
+.ui.horizontal.segments.portfolio-segment-group {
+  border: 0 !important;
+  margin: 0 !important;
 }

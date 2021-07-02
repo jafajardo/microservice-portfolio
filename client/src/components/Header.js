@@ -40,7 +40,11 @@ class Header extends Component {
 
   renderDashboard() {
     if (this.props.auth.currentUser) {
-      return <Menu.Item as="a">Dashboard</Menu.Item>;
+      return (
+        <Menu.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Menu.Item>
+      );
     }
 
     return null;

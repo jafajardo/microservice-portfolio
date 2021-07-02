@@ -5,7 +5,7 @@ import {
   ERROR,
   CURRENT_USER,
   SIGNOUT,
-  RETRIEVE_PORFOLIOS,
+  RETRIEVE_PORTFOLIOS,
   RETRIEVE_SPECIFIC_PORTFOLIO,
   RETRIEVE_HOLDINGS,
   CLEAR_HOLDINGS,
@@ -53,9 +53,11 @@ export const signup = (email, password) => {
         payload: { ...response.data, currentPortfolio: defaultPortfolio },
       });
 
-      if (defaultPortfolio) {
-        history.push(`/portfolio/${defaultPortfolio.id}`);
-      }
+      // if (defaultPortfolio) {
+      //   history.push(`/portfolio/${defaultPortfolio.id}`);
+      // }
+
+      history.push('/dashboard');
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
     }
@@ -74,8 +76,11 @@ export const signin = (email, password) => {
         console.log(response.data);
       }
 
+      await delay(200);
       // Initialise req.currentUser object
       await axios.get('/api/users/currentuser');
+
+      await delay(1000);
       // Use req.currentUser to retrieve portfolios
       let portfolios = null;
       let count = 0;
@@ -93,9 +98,11 @@ export const signin = (email, password) => {
         payload: { ...response.data, currentPortfolio: defaultPortfolio },
       });
 
-      if (defaultPortfolio) {
-        history.push(`/portfolio/${defaultPortfolio.id}`);
-      }
+      // if (defaultPortfolio) {
+      //   history.push(`/portfolio/${defaultPortfolio.id}`);
+      // }
+
+      history.push('/dashboard');
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
     }
@@ -157,7 +164,7 @@ export const retrievePortfolios = () => {
   return async (dispatch) => {
     try {
       const portfolios = await axios.get('/api/portfolios');
-      dispatch({ type: RETRIEVE_PORFOLIOS, payload: portfolios.data });
+      dispatch({ type: RETRIEVE_PORTFOLIOS, payload: portfolios.data });
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
     }
