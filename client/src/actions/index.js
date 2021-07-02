@@ -17,6 +17,12 @@ import {
 } from './types';
 import history from '../history';
 
+const delay = (ms) => {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, ms);
+  });
+};
+
 export const signup = (email, password) => {
   return async (dispatch) => {
     try {
@@ -25,9 +31,11 @@ export const signup = (email, password) => {
         password,
       });
 
+      await delay(200);
       // Initialise req.currentUser object
       await axios.get('/api/users/currentuser');
 
+      await delay(1000);
       // Use req.currentUser to retrieve portfolios
       let portfolios = null;
       let count = 0;
@@ -49,7 +57,6 @@ export const signup = (email, password) => {
         history.push(`/portfolio/${defaultPortfolio.id}`);
       }
     } catch (err) {
-      console.log(err.response);
       dispatch({ type: ERROR, payload: err.response.data });
     }
   };
@@ -66,8 +73,6 @@ export const signin = (email, password) => {
       if (process.env.NODE_ENV === 'DEV') {
         console.log(response.data);
       }
-
-      // dispatch({ type: SIGNIN, payload: response.data });
 
       // Initialise req.currentUser object
       await axios.get('/api/users/currentuser');
@@ -92,7 +97,6 @@ export const signin = (email, password) => {
         history.push(`/portfolio/${defaultPortfolio.id}`);
       }
     } catch (err) {
-      console.log(err.response);
       dispatch({ type: ERROR, payload: err.response.data });
     }
   };
@@ -167,7 +171,6 @@ export const retrieveHoldings = (portfolioId) => {
         `/api/holdings?portfolioId=${portfolioId}`
       );
 
-      console.log(response.data);
       dispatch({ type: RETRIEVE_HOLDINGS, payload: response.data });
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
@@ -191,10 +194,7 @@ export const retrieveShareStat = (symbol) => {
 };
 
 export const createTrade = (trade) => {
-  console.log(trade);
-  return async (dispatch, getState) => {
-    const state = getState();
-    console.log(state);
+  return async (dispatch) => {
     try {
       const response = await axios.post('/api/trades', {
         portfolioId: trade.portfolioId,
@@ -206,10 +206,12 @@ export const createTrade = (trade) => {
         brokerage: trade.brokerage,
         currency: trade.currency,
       });
+
       dispatch({
         type: CREATE_TRADE,
         payload: { [trade.symbol]: response.data },
       });
+
       history.push(`/portfolio/${trade.portfolioId}`);
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
@@ -223,6 +225,7 @@ export const retrieveTrades = (symbol, portfolioId) => {
       const response = await axios.get(
         `/api/trades?symbol=${symbol}&portfolioId=${portfolioId}`
       );
+
       dispatch({ type: RETRIEVE_TRADES, payload: response.data });
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });

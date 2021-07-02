@@ -51,7 +51,7 @@ class Header extends Component {
       <>
         <Menu fixed="top" inverted>
           <Container>
-            <Menu.Item as="a" header>
+            <Menu.Item header>
               <Link
                 to={
                   this.props.auth.currentPortfolio
