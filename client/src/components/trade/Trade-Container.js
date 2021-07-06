@@ -8,7 +8,7 @@ class TradeContainer extends Component {
 
     if (trades && trades.length > 0) {
       const sortedTrades = trades.sort((a, b) => new Date(a) + new Date(b));
-      return trades.map((trade) => {
+      return sortedTrades.map((trade) => {
         return (
           <TradeColumn
             key={trade.id}

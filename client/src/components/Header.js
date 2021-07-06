@@ -40,7 +40,11 @@ class Header extends Component {
 
   renderDashboard() {
     if (this.props.auth.currentUser) {
-      return <Menu.Item as="a">Dashboard</Menu.Item>;
+      return (
+        <Menu.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Menu.Item>
+      );
     }
 
     return null;
@@ -51,7 +55,7 @@ class Header extends Component {
       <>
         <Menu fixed="top" inverted>
           <Container>
-            <Menu.Item as="a" header>
+            <Menu.Item header>
               <Link
                 to={
                   this.props.auth.currentPortfolio

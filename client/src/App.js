@@ -8,14 +8,16 @@ import Signin from './components/auth/Signin';
 import Portfolio from './components/portfolio/Portfolio';
 import NewHolding from './components/holding/New-Holding';
 import HoldingDetails from './components/holding/Holding-Details';
+import Dashboard from './components/dashboard/Dashboard';
 
 const App = () => {
   return (
-    <Switch>
-      <Container style={{ paddingTop: '5em' }}>
+    <Container style={{ paddingTop: '5em' }}>
+      <Switch>
         <Route exact path="/" component={Welcome} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Signin} />
+        <Route exact path="/dashboard" component={Dashboard} />
         <Route
           exact
           path="/portfolio/:portfolioId"
@@ -31,8 +33,8 @@ const App = () => {
           path="/portfolio/:portfolioId/:symbol"
           component={RequireAuth(HoldingDetails)}
         />
-      </Container>
-    </Switch>
+      </Switch>
+    </Container>
   );
 };
 

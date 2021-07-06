@@ -53,7 +53,7 @@ class Signin extends Component {
             className="ui container"
             onSubmit={this.handleOnSubmit}
           >
-            <Segment stacked>
+            <Segment raised>
               <Form.Input
                 fluid
                 icon="user"

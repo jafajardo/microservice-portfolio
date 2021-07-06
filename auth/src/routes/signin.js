@@ -14,7 +14,7 @@ router.post('/api/users/signin', async (req, res) => {
   const existingUser = await User.findOne({ email });
 
   if (!existingUser) {
-    return res.status(400).send({ msg: 'Invalid email or password' });
+    return res.status(401).send({ msg: 'Invalid email or password' });
   }
 
   const passwordMatches = await Password.compare(
@@ -22,7 +22,7 @@ router.post('/api/users/signin', async (req, res) => {
     password
   );
   if (!passwordMatches) {
-    return res.status(400).send({ msg: 'Invalid email or password' });
+    return res.status(401).send({ msg: 'Invalid email or password' });
   }
 
   req.session.jwt = {
