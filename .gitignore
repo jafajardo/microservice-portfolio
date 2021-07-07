@@ -1,33 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@jafajardo 
-github
-/
-gitignore
-3.2k
-120k66.1k
-Code
-Pull requests
-271
-Actions
-Security
-Insights
-gitignore/Node.gitignore
-@martinwoodward
-martinwoodward Merge pull request #3651 from kachick/node-ignore-envs
-…
-Latest commit d0f9781 22 days ago
- History
- 61 contributors
-@stuartpb@shiftkey@SimonSiefke@TennyZhuang@venatoria@ro31337@Richienb@melonmanchan@kachick@gouthamve@jucrouzet@cheddar
-118 lines (88 sloc)  1.81 KB
-  
 # Logs
 logs
 *.log
@@ -146,16 +116,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-© 2021 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Loading complete
