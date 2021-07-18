@@ -156,7 +156,7 @@ const start = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
-    console.log('Connected to Mongodb');
+    console.log('Connected to Mongodb...');
   } catch (err) {
     console.log('Error connecting to Mongodb', err);
   }
@@ -170,7 +170,7 @@ const start = async () => {
     console.log('Error connecting to NATS server', err);
   }
 
-  app.listen(PORT, () => console.log(`Listening on port ${PORT}....`));
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 };
 
 start();
