@@ -13,7 +13,9 @@ class TradeContainer extends Component {
         return (
           <TradeColumn
             key={trade.id}
+            tradeId={trade.id}
             date={trade.date}
+            currency={trade.currency}
             tradeType={trade.tradeType}
             quantity={trade.quantity}
             sharePrice={trade.sharePrice}

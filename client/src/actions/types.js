@@ -12,3 +12,4 @@ export const CLEAR_SHARE_STAT = 'CLEAR_SHARE_STAT';
 export const CREATE_TRADE = 'CREATE_TRADE';
 export const CLEAR_TRADE = 'CLEAR_TRADE';
 export const RETRIEVE_TRADES = 'RETRIEVE_TRADES';
+export const UPDATE_TRADE = 'UPDATE_TRADE';

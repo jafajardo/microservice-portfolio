@@ -41,13 +41,14 @@ router.put(
     try {
       const trade = await Trade.findById(tradeId).populate('portfolio');
       const formattedDate = moment(date, 'YYYY-MM-DD');
+
       if (
         trade &&
         trade.portfolio._id.toString() === portfolioId &&
         trade.portfolio.user.toString() == req.currentUser.id
       ) {
         trade.set({
-          formattedDate,
+          date: formattedDate,
           quantity,
           sharePrice,
           brokerage,

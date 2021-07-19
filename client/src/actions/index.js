@@ -14,6 +14,7 @@ import {
   CREATE_TRADE,
   CLEAR_TRADE,
   RETRIEVE_TRADES,
+  UPDATE_TRADE,
 } from './types';
 import history from '../history';
 
@@ -234,6 +235,29 @@ export const retrieveTrades = (symbol, portfolioId) => {
       );
 
       dispatch({ type: RETRIEVE_TRADES, payload: response.data });
+    } catch (err) {
+      dispatch({ type: ERROR, payload: err.response.data });
+    }
+  };
+};
+
+export const updateTrade = (trade) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put(`/api/trades/${trade.tradeId}`, {
+        portfolioId: trade.portfolioId,
+        date: trade.date,
+        quantity: trade.quantity,
+        sharePrice: trade.sharePrice,
+        brokerage: trade.brokerage,
+        currency: trade.currency,
+        tradeType: trade.tradeType,
+      });
+
+      dispatch({
+        type: UPDATE_TRADE,
+        payload: { [trade.symbol]: response.data },
+      });
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
     }
