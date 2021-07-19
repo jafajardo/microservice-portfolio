@@ -34,6 +34,7 @@ class HoldingContainer extends Component {
     return (
       <>
         <Button
+          positive
           floated="right"
           compact
           style={{ marginBottom: '8px' }}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Button } from 'semantic-ui-react';
 import { createTrade } from '../../actions';
+import history from '../../history';
 
 class NewHolding extends Component {
   state = {
@@ -20,6 +21,7 @@ class NewHolding extends Component {
   };
 
   render() {
+    const { id: portfolioId } = this.props.auth.currentPortfolio;
     return (
       <Form error className="ui container" onSubmit={this.handleOnSubmit}>
         <Form.Field>
@@ -80,7 +82,13 @@ class NewHolding extends Component {
           </select>
         </Form.Field>
 
-        <Button type="submit" className="btn">
+        <Button
+          negative
+          onClick={() => history.push(`/portfolio/${portfolioId}`)}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" positive>
           Save Trade
         </Button>
       </Form>

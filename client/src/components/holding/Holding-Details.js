@@ -11,13 +11,18 @@ class HoldingDetails extends Component {
   }
 
   render() {
-    const { symbol } = this.props.match.params;
+    const { symbol, portfolioId } = this.props.match.params;
     if (
       this.props.trade &&
       this.props.trade[symbol] &&
       this.props.trade[symbol].length > 0
     ) {
-      return <TradeContainer trades={this.props.trade[symbol]} />;
+      return (
+        <TradeContainer
+          trades={this.props.trade[symbol]}
+          portfolioId={portfolioId}
+        />
+      );
     } else {
       return (
         <Placeholder>

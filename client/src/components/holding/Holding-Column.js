@@ -66,9 +66,13 @@ class HoldingColumn extends Component {
 
       const gains = (currentValue / currentCapital - 1) * 100;
 
-      return gains.toFixed(2);
+      return this.twoDecimalPlacesNumber(gains);
     }
     return 0;
+  }
+
+  twoDecimalPlacesNumber(num) {
+    return num.toFixed(2);
   }
 
   render() {
@@ -97,9 +101,9 @@ class HoldingColumn extends Component {
             </Link>
           </Table.Cell>
           <Table.Cell>{symbol}</Table.Cell>
-          <Table.Cell>{stat.priceBid}</Table.Cell>
+          <Table.Cell>{this.twoDecimalPlacesNumber(stat.priceBid)}</Table.Cell>
           <Table.Cell>{quantity}</Table.Cell>
-          <Table.Cell>{value}</Table.Cell>
+          <Table.Cell>{this.twoDecimalPlacesNumber(value)}</Table.Cell>
           <Table.Cell>{`${capitalGains}%`}</Table.Cell>
         </Table.Row>
       );
