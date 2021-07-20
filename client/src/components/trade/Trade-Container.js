@@ -4,6 +4,10 @@ import TradeColumn from './Trade-Column';
 import history from '../../history';
 
 class TradeContainer extends Component {
+  componentDidMount() {
+    console.log(this.props.shareStats);
+  }
+
   renderTradeColumns() {
     const { trades } = this.props;
 

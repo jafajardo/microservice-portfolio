@@ -20,6 +20,7 @@ class HoldingDetails extends Component {
       return (
         <TradeContainer
           trades={this.props.trade[symbol]}
+          shareStats={this.props.shareStat[symbol]}
           portfolioId={portfolioId}
         />
       );
@@ -36,6 +37,7 @@ class HoldingDetails extends Component {
 const mapStateToProps = (state) => {
   return {
     trade: state.trade,
+    shareStat: state.shareStat,
   };
 };
 
