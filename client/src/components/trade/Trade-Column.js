@@ -48,8 +48,11 @@ class TradeColumn extends Component {
     const day = date.getDate();
     const year = date.getFullYear();
 
+    console.log(
+      `${year}-${numericMonthArray[month]}-${day < 10 ? '0' + day : day}`
+    );
     return type === 'input'
-      ? `${year}-${numericMonthArray[month]}-${day}`
+      ? `${year}-${numericMonthArray[month]}-${day < 10 ? '0' + day : day}`
       : `${day} ${monthArray[month]} ${year}`;
   }
 
