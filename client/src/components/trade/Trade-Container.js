@@ -5,12 +5,8 @@ import TradesTable from './Trade-TradesTable';
 import TradeChart from './Trade-Chart';
 
 class TradeContainer extends Component {
-  componentDidMount() {
-    console.log(this.props.shareStats);
-  }
-
   render() {
-    const { trades, portfolioId, shareStats } = this.props;
+    const { symbol, trades, portfolioId, shareStats } = this.props;
 
     return (
       <>
@@ -33,7 +29,7 @@ class TradeContainer extends Component {
           Add New Holding
         </Button>
 
-        <TradeChart shareStats={shareStats} />
+        <TradeChart symbol={symbol} shareStats={shareStats} />
         <TradesTable trades={trades} />
       </>
     );

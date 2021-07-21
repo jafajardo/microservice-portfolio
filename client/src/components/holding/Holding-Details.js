@@ -19,6 +19,7 @@ class HoldingDetails extends Component {
     ) {
       return (
         <TradeContainer
+          symbol={symbol}
           trades={this.props.trade[symbol]}
           shareStats={this.props.shareStat[symbol]}
           portfolioId={portfolioId}
