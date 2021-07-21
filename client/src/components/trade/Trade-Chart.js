@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Select } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import { Line } from 'react-chartjs-2';
 import { retrieveShareStat } from '../../actions';
 
 class TradeChart extends Component {
+  state = {
+    graph: 'price',
+  };
+
   componentDidMount() {
     if (!this.props.shareStats) {
       this.props.retrieveShareStat(this.props.symbol);
@@ -54,14 +58,28 @@ class TradeChart extends Component {
     return labels;
   }
 
+  handleOnChange = (e, { value }) => {
+    this.setState({ graph: value });
+  };
+
   render() {
     if (!this.props.shareStats) {
       return null;
     }
 
-    const data = {
-      labels: this.generateLabels(200),
-      datasets: [
+    let datasets = [];
+    if (this.state.graph === 'price') {
+      datasets = [
+        {
+          label: 'Share Price',
+          data: this.props.shareStats.close.slice(199),
+          fill: false,
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgba(255, 99, 132, 0.2)',
+        },
+      ];
+    } else {
+      datasets = [
         this.generateDataset(this.props.shareStats.close, 200),
         this.generateDataset(
           this.props.shareStats.close,
@@ -69,7 +87,12 @@ class TradeChart extends Component {
           'rgb(22, 171, 57)',
           'rgba(22, 171, 57, 0.2)'
         ),
-      ],
+      ];
+    }
+
+    const data = {
+      labels: this.generateLabels(200),
+      datasets,
     };
 
     const options = {
@@ -85,18 +108,23 @@ class TradeChart extends Component {
     };
 
     const graphOptions = [
+      { key: 'price', value: 'price', text: 'Price' },
       {
         key: 'sma',
         value: 'sma',
         text: 'Simple Moving Average',
         default: true,
       },
-      { key: 'price', value: 'price', text: 'Price' },
     ];
 
     return (
       <div style={{ display: 'block' }}>
-        <Select placeholder="Select Graph Type" options={graphOptions} />
+        <Dropdown
+          onChange={this.handleOnChange}
+          selection
+          options={graphOptions}
+          defaultValue={graphOptions[0].value}
+        />
         <Line data={data} options={options} />
       </div>
     );
