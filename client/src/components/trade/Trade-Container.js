@@ -10,24 +10,26 @@ class TradeContainer extends Component {
 
     return (
       <>
-        <Button
-          negative
-          floated="left"
-          compact
-          style={{ marginBottom: '8px' }}
-          onClick={() => history.push(`/portfolio/${portfolioId}`)}
-        >
-          Back To Portfolio
-        </Button>
-        <Button
-          positive
-          floated="right"
-          compact
-          style={{ marginBottom: '8px' }}
-          onClick={() => history.push(`/portfolio/${portfolioId}/newHolding`)}
-        >
-          Add New Holding
-        </Button>
+        <div style={{ height: '70px' }}>
+          <Button
+            negative
+            floated="left"
+            compact
+            style={{ marginBottom: '8px' }}
+            onClick={() => history.push(`/portfolio/${portfolioId}`)}
+          >
+            Back To Portfolio
+          </Button>
+          <Button
+            positive
+            floated="right"
+            compact
+            style={{ marginBottom: '8px' }}
+            onClick={() => history.push(`/portfolio/${portfolioId}/newHolding`)}
+          >
+            Add New Holding
+          </Button>
+        </div>
 
         <TradeChart symbol={symbol} shareStats={shareStats} />
         <TradesTable trades={trades} />
