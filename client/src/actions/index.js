@@ -54,11 +54,13 @@ export const signup = (email, password) => {
         payload: { ...response.data, currentPortfolio: defaultPortfolio },
       });
 
-      // if (defaultPortfolio) {
-      //   history.push(`/portfolio/${defaultPortfolio.id}`);
-      // }
-
-      history.push('/dashboard');
+      if (defaultPortfolio) {
+        history.push(`/portfolio/${defaultPortfolio.id}`);
+        return;
+      } else {
+        history.push('/dashboard');
+        return;
+      }
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
     }
@@ -99,11 +101,13 @@ export const signin = (email, password) => {
         payload: { ...response.data, currentPortfolio: defaultPortfolio },
       });
 
-      // if (defaultPortfolio) {
-      //   history.push(`/portfolio/${defaultPortfolio.id}`);
-      // }
-
-      history.push('/dashboard');
+      if (defaultPortfolio) {
+        history.push(`/portfolio/${defaultPortfolio.id}`);
+        return;
+      } else {
+        history.push('/dashboard');
+        return;
+      }
     } catch (err) {
       dispatch({ type: ERROR, payload: err.response.data });
     }

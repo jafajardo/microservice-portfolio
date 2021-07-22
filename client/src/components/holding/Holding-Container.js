@@ -15,6 +15,15 @@ class HoldingContainer extends Component {
   renderHoldings() {
     if (this.props.holdings && this.props.holdings.length > 0) {
       const { holdings } = this.props;
+      holdings.sort((a, b) => {
+        if (a.symbol.toUpperCase() < b.symbol.toUpperCase()) {
+          return -1;
+        } else if (a.symbol.toUpperCase() > b.symbol.toUpperCase()) {
+          return 1;
+        }
+        return 0;
+      });
+
       return holdings.map((holding) => (
         <HoldingColumn
           key={`${holding.id}`}

@@ -7,7 +7,18 @@ class TradesTable extends Component {
     const { trades } = this.props;
 
     if (trades && trades.length > 0) {
-      const sortedTrades = trades.sort((a, b) => new Date(a) < new Date(b));
+      const sortedTrades = trades.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+
+        if (dateA < dateB) {
+          return -1;
+        } else if (dateA > dateB) {
+          return 1;
+        }
+        return 0;
+      });
+
       return sortedTrades.map((trade) => {
         return (
           <TradeColumn
@@ -28,7 +39,7 @@ class TradesTable extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ margin: '1em 0' }}>
         <Table striped singleLine selectable compact="very">
           <Table.Header>
             <Table.Row>
