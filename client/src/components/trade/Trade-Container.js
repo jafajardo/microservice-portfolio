@@ -10,7 +10,7 @@ class TradeContainer extends Component {
 
     return (
       <>
-        <div style={{ height: '70px' }}>
+        <div style={{ minHeight: '2.2em' }}>
           <Button
             negative
             floated="left"

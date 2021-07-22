@@ -6,7 +6,7 @@ import { retrieveShareStat } from '../../actions';
 
 class TradeChart extends Component {
   state = {
-    graph: 'price',
+    graph: 'PRICE',
   };
 
   componentDidMount() {
@@ -33,14 +33,14 @@ class TradeChart extends Component {
   }
 
   generateDataset(
-    dataset,
-    daySMA,
+    label,
+    func,
     backgroundColor = 'rgb(255, 99, 132)',
     borderColor = 'rgb(255, 99, 132, 0.2)'
   ) {
     return {
-      label: `${daySMA} Day SMA`,
-      data: this.calculateSMA(dataset, daySMA),
+      label,
+      data: func,
       fill: false,
       backgroundColor,
       borderColor,
@@ -51,8 +51,8 @@ class TradeChart extends Component {
     let counter = 1;
     const labels = [];
     while (counter <= num) {
-      counter++;
       labels.push(counter.toString());
+      counter++;
     }
 
     return labels;
@@ -68,24 +68,28 @@ class TradeChart extends Component {
     }
 
     let datasets = [];
-    if (this.state.graph === 'price') {
+    if (this.state.graph === 'PRICE') {
       datasets = [
-        {
-          label: 'Share Price',
-          data: this.props.shareStats.close.slice(199),
-          fill: false,
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgba(255, 99, 132, 0.2)',
-        },
+        this.generateDataset(
+          'Share Price',
+          this.props.shareStats.close.slice(200),
+          'rgb(255, 99, 132)',
+          'rgba(255, 99, 132, 0.2)'
+        ),
       ];
     } else {
+      const backgroundColor = 'rgb(22, 171, 57)';
+      const borderColor = 'rgba(22, 171, 57, 0.2)';
       datasets = [
-        this.generateDataset(this.props.shareStats.close, 200),
         this.generateDataset(
-          this.props.shareStats.close,
-          50,
-          'rgb(22, 171, 57)',
-          'rgba(22, 171, 57, 0.2)'
+          '200 Day SMA',
+          this.calculateSMA(this.props.shareStats.close, 200)
+        ),
+        this.generateDataset(
+          '50 Day SMA',
+          this.calculateSMA(this.props.shareStats.close, 50),
+          backgroundColor,
+          borderColor
         ),
       ];
     }
@@ -108,23 +112,26 @@ class TradeChart extends Component {
     };
 
     const graphOptions = [
-      { key: 'price', value: 'price', text: 'Price' },
+      { key: 'PRICE', value: 'PRICE', text: 'Price' },
       {
-        key: 'sma',
-        value: 'sma',
+        key: 'SMA',
+        value: 'SMA',
         text: 'Simple Moving Average',
         default: true,
       },
     ];
 
     return (
-      <div style={{ display: 'block' }}>
-        <Dropdown
-          onChange={this.handleOnChange}
-          selection
-          options={graphOptions}
-          defaultValue={graphOptions[0].value}
-        />
+      <div style={{ margin: '1em 0em' }}>
+        <div style={{ padding: '0.5em 0em' }}>
+          <Dropdown
+            onChange={this.handleOnChange}
+            selection
+            fluid
+            options={graphOptions}
+            value={this.state.graph}
+          />
+        </div>
         <Line data={data} options={options} />
       </div>
     );

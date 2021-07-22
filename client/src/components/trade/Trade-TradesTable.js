@@ -28,7 +28,7 @@ class TradesTable extends Component {
 
   render() {
     return (
-      <>
+      <div>
         <Table striped singleLine selectable compact="very">
           <Table.Header>
             <Table.Row>
@@ -43,7 +43,7 @@ class TradesTable extends Component {
           </Table.Header>
           <Table.Body>{this.renderTradeColumns()}</Table.Body>
         </Table>
-      </>
+      </div>
     );
   }
 }
